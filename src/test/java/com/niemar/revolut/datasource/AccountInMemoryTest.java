@@ -64,7 +64,14 @@ public class AccountInMemoryTest {
         Assert.assertEquals(newAccountData.getCurrency(), updated.getCurrency());
     }
 
-    //TODO add test - try to update account which doesn't exist
+    @Test
+    public void updateNotExistingAccount() {
+        Account newAccountData = new Account(null, BigDecimal.valueOf(456.12), "EUR");
+
+        Account updated = accountDAO.update("noSuchId", newAccountData);
+
+        Assert.assertNull(updated);
+    }
 
     @Test
     public void testThatIdIsNeverUpdated() {

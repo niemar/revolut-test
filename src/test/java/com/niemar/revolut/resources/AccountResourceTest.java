@@ -8,6 +8,7 @@ import org.junit.Assert;
 import org.junit.ClassRule;
 import org.junit.Test;
 
+import javax.ws.rs.core.GenericType;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +44,8 @@ public class AccountResourceTest {
         when(ACCOUNT_DAO.findAll()).thenReturn(accounts);
 
 
-        Assert.assertEquals(accounts, resources.target("/accounts").request().get(List.class));
+        Assert.assertEquals(accounts, resources.target("/accounts").request().get(new GenericType<List<Account>>() {
+        }));
     }
 
     @Test

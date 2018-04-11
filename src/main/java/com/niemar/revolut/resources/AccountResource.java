@@ -5,6 +5,7 @@ import com.niemar.revolut.datasource.AccountDAO;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
 
 @Path("/accounts")
@@ -22,30 +23,52 @@ public class AccountResource {
 
     @GET
     @Path(ID_PATH)
-    public Account getAccount(@PathParam(ID) String id) {
-        return accountDAO.findById(id);
+    public Response getAccount(@PathParam(ID) String id) {
+        Account account = accountDAO.findById(id);
+        if (account == null) {
+            return buildNotFoundResponse(id);
+        }
+        return Response.ok(account).build();
+    }
+
+    private Response buildNotFoundResponse(@PathParam(ID) String id) {
+        return Response.status(Response.Status.NOT_FOUND)
+                .entity("Entity not found for id: " + id)
+                .build();
     }
 
     @GET
-    public List<Account> getAccounts() {
-        return accountDAO.findAll();
+    public Response getAccounts() {
+        List<Account> accounts = accountDAO.findAll();
+        return Response.ok(accounts).build();
     }
 
+    //TODO validation of account
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Account createAccount(Account account) {
-        return accountDAO.create(account);
+    public Response createAccount(Account account) {
+        Account created = accountDAO.create(account);
+        return Response.status(Response.Status.CREATED).entity(created).build();
     }
 
     @PUT
     @Path(ID_PATH)
-    public Account updateAccount(@PathParam(ID) String id, Account account) {
-        return accountDAO.update(id, account);
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateAccount(@PathParam(ID) String id, Account account) {
+        Account updated = accountDAO.update(id, account);
+        if (updated == null) {
+            return buildNotFoundResponse(id);
+        }
+        return Response.ok().entity(updated).build();
     }
 
     @DELETE
     @Path(ID_PATH)
-    public Account deleteAccount(@PathParam(ID) String id) {
-        return accountDAO.delete(id);
+    public Response deleteAccount(@PathParam(ID) String id) {
+        Account deleted = accountDAO.delete(id);
+        if (deleted == null) {
+            return buildNotFoundResponse(id);
+        }
+        return Response.status(Response.Status.NO_CONTENT).build();
     }
 }

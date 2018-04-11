@@ -2,7 +2,6 @@ package com.niemar.revolut.datasource;
 
 import com.niemar.revolut.api.Account;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -12,15 +11,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public class AccountInMemory implements AccountDAO {
 
     private Map<String, Account> accounts = new ConcurrentHashMap<String, Account>();
-
-
-    public AccountInMemory() {
-        //TODO remove
-     //   accounts.put("12", new Account("12", BigDecimal.ONE, "USD"));
-       // accounts.put("f5f17733-3152-4c83-888b-fa99ffc03591", new Account("f5f17733-3152-4c83-888b-fa99ffc03591", BigDecimal.TEN, "USD"));
-        //accounts.put("14", new Account("14", BigDecimal.ZERO, "USD"));
-    }
-
 
     public Account findById(String id) {
         return accounts.get(id);

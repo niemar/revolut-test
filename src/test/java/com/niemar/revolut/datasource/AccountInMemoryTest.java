@@ -23,6 +23,8 @@ public class AccountInMemoryTest {
         Account created = accountDAO.create(MONEY_IN_USD);
 
         Assert.assertNotNull(created.getId());
+        Assert.assertEquals(MONEY_IN_USD.getBalance(), created.getBalance());
+        Assert.assertEquals(MONEY_IN_USD.getCurrency(), created.getCurrency());
     }
 
     @Test

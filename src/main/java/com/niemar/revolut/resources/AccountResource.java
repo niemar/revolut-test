@@ -1,6 +1,7 @@
 package com.niemar.revolut.resources;
 
 import com.niemar.revolut.api.Account;
+import com.niemar.revolut.api.ErrorResponse;
 import com.niemar.revolut.datasource.AccountDAO;
 
 import javax.ws.rs.*;
@@ -14,6 +15,7 @@ public class AccountResource {
 
     private static final String ID_PATH = "{id}";
     private static final String ID = "id";
+    public static final String ENTITY_NOT_FOUND_FOR_ID = "Entity not found for id: ";
 
     private AccountDAO accountDAO;
 
@@ -33,7 +35,8 @@ public class AccountResource {
 
     private Response buildNotFoundResponse(@PathParam(ID) String id) {
         return Response.status(Response.Status.NOT_FOUND)
-                .entity("Entity not found for id: " + id)
+                .entity(new ErrorResponse(ENTITY_NOT_FOUND_FOR_ID + id))
+                //.type(MediaType.APPLICATION_JSON)
                 .build();
     }
 

@@ -10,7 +10,7 @@ import java.util.List;
 
 public class AccountInMemoryTest {
 
-    private static final Account MONEY_IN_USD = new Account(null, BigDecimal.valueOf(123.45), "USD");
+    private static final Account MONEY_IN_USD = new Account(BigDecimal.valueOf(123.45), "USD");
     private AccountDAO accountDAO;
 
     @Before
@@ -49,7 +49,7 @@ public class AccountInMemoryTest {
     @Test
     public void updateBalance() {
         Account created = accountDAO.create(MONEY_IN_USD);
-        Account newAccountData = new Account(null, BigDecimal.valueOf(456.12), "EUR");
+        Account newAccountData = new Account(BigDecimal.valueOf(456.12), "EUR");
 
         Account updated = accountDAO.update(created.getId(), newAccountData);
 
@@ -59,7 +59,7 @@ public class AccountInMemoryTest {
     @Test
     public void updateCurrency() {
         Account created = accountDAO.create(MONEY_IN_USD);
-        Account newAccountData = new Account(null, BigDecimal.valueOf(456.12), "EUR");
+        Account newAccountData = new Account(BigDecimal.valueOf(456.12), "EUR");
 
         Account updated = accountDAO.update(created.getId(), newAccountData);
 
@@ -68,7 +68,7 @@ public class AccountInMemoryTest {
 
     @Test
     public void updateNotExistingAccount() {
-        Account newAccountData = new Account(null, BigDecimal.valueOf(456.12), "EUR");
+        Account newAccountData = new Account(BigDecimal.valueOf(456.12), "EUR");
 
         Account updated = accountDAO.update("noSuchId", newAccountData);
 

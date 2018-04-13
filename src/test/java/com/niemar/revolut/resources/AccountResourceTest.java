@@ -36,7 +36,8 @@ public class AccountResourceTest {
     public void getAccount() {
         when(ACCOUNT_DAO.findById(eq("f2447ec2-f0b3-4c75-aa33-cacffa8ca38a"))).thenReturn(MONEY_IN_USD);
 
-        Assert.assertEquals(MONEY_IN_USD, resources.target("/accounts/f2447ec2-f0b3-4c75-aa33-cacffa8ca38a").request().get(Account.class));
+        Account actual = resources.target("/accounts/f2447ec2-f0b3-4c75-aa33-cacffa8ca38a").request().get(Account.class);
+        Assert.assertEquals(MONEY_IN_USD, actual);
     }
 
     @Test
@@ -69,7 +70,7 @@ public class AccountResourceTest {
 
     @Test
     public void createAccount() {
-        Account money = new Account(null, BigDecimal.valueOf(123.45), "USD");
+        Account money = new Account(BigDecimal.valueOf(123.45), "USD");
         when(ACCOUNT_DAO.create(eq(money))).thenReturn(MONEY_IN_USD);
 
         Account createdAccount = resources.target("/accounts").request().post(Entity.json(money), Account.class);
@@ -79,7 +80,7 @@ public class AccountResourceTest {
 
     @Test
     public void updateAccount() {
-        Account money = new Account(null, BigDecimal.valueOf(123.45), "USD");
+        Account money = new Account(BigDecimal.valueOf(123.45), "USD");
         when(ACCOUNT_DAO.update(eq(MONEY_IN_USD.getId()), eq(money))).thenReturn(MONEY_IN_USD);
 
         Account createdAccount = resources.target("/accounts/" + MONEY_IN_USD.getId()).request().put(Entity.json(money), Account.class);

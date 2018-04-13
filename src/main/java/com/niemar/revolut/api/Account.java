@@ -18,6 +18,10 @@ public class Account {
         this.currency = currency;
     }
 
+    public Account(BigDecimal balance, String currency) {
+        this(null, balance, currency);
+    }
+
     public String getId() {
         return id;
     }

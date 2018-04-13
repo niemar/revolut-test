@@ -1,16 +1,16 @@
 package com.niemar.revolut.datasource;
 
 import com.niemar.revolut.api.Account;
+import com.niemar.revolut.util.IdUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class AccountInMemory implements AccountDAO {
 
-    private Map<String, Account> accounts = new ConcurrentHashMap<String, Account>();
+    private Map<String, Account> accounts = new ConcurrentHashMap<>();
 
     public Account findById(String id) {
         return accounts.get(id);
@@ -21,7 +21,7 @@ public class AccountInMemory implements AccountDAO {
     }
 
     public Account create(Account account) {
-        Account newAccount = new Account(generateId(), account.getBalance(), account.getCurrency());
+        Account newAccount = new Account(IdUtil.generateId(), account.getBalance(), account.getCurrency());
         accounts.put(newAccount.getId(), newAccount);
         return newAccount;
     }
@@ -32,11 +32,6 @@ public class AccountInMemory implements AccountDAO {
         }
         // thread safe update
         return accounts.computeIfPresent(id, (idParam, updated) -> new Account(idParam, account.getBalance(), account.getCurrency()));
-
-    }
-
-    private String generateId() {
-        return UUID.randomUUID().toString();
     }
 
     public Account delete(String id) {

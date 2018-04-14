@@ -1,0 +1,8 @@
+{
+  "fromAccount": "AAAA7ec2-f0b3-4c75-aa33-cacffa8ca38a",
+  "toAccount": "BBBB7ec2-f0b3-4c75-aa33-cacffa8ca38a",
+  "amount": "123.45",
+  "currency": "USD",
+  "id": "CCCC7ec2-f0b3-4c75-aa33-cacffa8ca38a",
+  "status": "COMPLETED"
+}

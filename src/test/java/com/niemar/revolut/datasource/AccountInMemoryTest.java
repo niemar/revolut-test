@@ -1,6 +1,7 @@
 package com.niemar.revolut.datasource;
 
 import com.niemar.revolut.api.Account;
+import com.niemar.revolut.util.TestUtil;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,9 +23,7 @@ public class AccountInMemoryTest {
     public void create() {
         Account created = accountDAO.create(MONEY_IN_USD);
 
-        Assert.assertNotNull(created.getId());
-        Assert.assertEquals(MONEY_IN_USD.getBalance(), created.getBalance());
-        Assert.assertEquals(MONEY_IN_USD.getCurrency(), created.getCurrency());
+        TestUtil.assertEquals(MONEY_IN_USD, created);
     }
 
     @Test

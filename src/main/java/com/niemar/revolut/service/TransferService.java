@@ -29,7 +29,6 @@ public class TransferService {
             return createTransferWithStatus(transfer, Transfer.Status.DECLINED);
         }
 
-        // TODO test this
         // deadlock prevention
         int result = fromAccount.getId().compareTo(toAccount.getId());
         Account lock1 = result > 0 ? fromAccount : toAccount;

@@ -2,6 +2,7 @@ package com.niemar.revolut;
 
 import com.niemar.revolut.datasource.AccountInMemory;
 import com.niemar.revolut.datasource.TransferInMemory;
+import com.niemar.revolut.health.AppHealthCheck;
 import com.niemar.revolut.resources.AccountResource;
 import com.niemar.revolut.resources.TransferResource;
 import com.niemar.revolut.service.TransferService;
@@ -22,7 +23,6 @@ public class MoneyTransferApplication extends Application<MoneyTransferConfigura
 
     @Override
     public void initialize(Bootstrap<MoneyTransferConfiguration> bootstrap) {
-        // nothing to do yet
     }
 
     public void run(MoneyTransferConfiguration moneyTransferApplication, Environment environment) {
@@ -30,7 +30,10 @@ public class MoneyTransferApplication extends Application<MoneyTransferConfigura
         final AccountResource accountResource = new AccountResource(accountInMemory);
         environment.jersey().register(accountResource);
 
-        final TransferResource transferResource = new TransferResource(new TransferService(new TransferInMemory(), accountInMemory));
+        final TransferResource transferResource = new TransferResource(new TransferService(
+                new TransferInMemory(), accountInMemory));
         environment.jersey().register(transferResource);
+
+        environment.healthChecks().register("healthCheck", new AppHealthCheck());
     }
 }

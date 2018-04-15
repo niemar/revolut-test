@@ -1,5 +1,6 @@
 
 Money Transfer API
+
 Produces and consumes only application/json.
 
     GET     /accounts/{id}

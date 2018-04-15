@@ -1,7 +1,10 @@
 package com.niemar.revolut;
 
 import com.niemar.revolut.datasource.AccountInMemory;
+import com.niemar.revolut.datasource.TransferInMemory;
 import com.niemar.revolut.resources.AccountResource;
+import com.niemar.revolut.resources.TransferResource;
+import com.niemar.revolut.service.TransferService;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
@@ -23,7 +26,11 @@ public class MoneyTransferApplication extends Application<MoneyTransferConfigura
     }
 
     public void run(MoneyTransferConfiguration moneyTransferApplication, Environment environment) {
-        final AccountResource accountResource = new AccountResource(new AccountInMemory());
+        AccountInMemory accountInMemory = new AccountInMemory();
+        final AccountResource accountResource = new AccountResource(accountInMemory);
         environment.jersey().register(accountResource);
+
+        final TransferResource transferResource = new TransferResource(new TransferService(new TransferInMemory(), accountInMemory));
+        environment.jersey().register(transferResource);
     }
 }

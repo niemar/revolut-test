@@ -30,7 +30,7 @@ public class TransferTest {
     public void deserializesFromJSON() throws Exception {
         final Transfer expected = new Transfer("AAAA7ec2-f0b3-4c75-aa33-cacffa8ca38a",
                 "BBBB7ec2-f0b3-4c75-aa33-cacffa8ca38a", BigDecimal.valueOf(123.45),
-                "USD", "CCCC7ec2-f0b3-4c75-aa33-cacffa8ca38a", Transfer.Status.PENDING);
+                "USD", "CCCC7ec2-f0b3-4c75-aa33-cacffa8ca38a", Transfer.Status.COMPLETED);
 
         Transfer actual = MAPPER.readValue(fixture("fixtures/transfer.json"), Transfer.class);
 

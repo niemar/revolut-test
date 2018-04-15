@@ -4,6 +4,7 @@ import com.niemar.revolut.api.Account;
 import com.niemar.revolut.api.ErrorResponse;
 import com.niemar.revolut.datasource.AccountDAO;
 import com.niemar.revolut.datasource.AccountInMemory;
+import com.niemar.revolut.util.ResourceUtil;
 import io.dropwizard.testing.junit.ResourceTestRule;
 import org.junit.Assert;
 import org.junit.ClassRule;
@@ -24,9 +25,8 @@ import static org.mockito.Mockito.when;
 public class AccountResourceTest {
 
     private static final AccountDAO ACCOUNT_DAO = mock(AccountInMemory.class);
-
-    private static final Account MONEY_IN_USD = new Account("f2447ec2-f0b3-4c75-aa33-cacffa8ca38a", BigDecimal.valueOf(123.45), "USD");
-
+    private static final Account MONEY_IN_USD = new Account("f2447ec2-f0b3-4c75-aa33-cacffa8ca38a",
+            BigDecimal.valueOf(123.45), "USD");
     @ClassRule
     public static final ResourceTestRule resources = ResourceTestRule.builder()
             .addResource(new AccountResource(ACCOUNT_DAO))
@@ -43,7 +43,7 @@ public class AccountResourceTest {
     @Test
     public void accountNotFound() {
         String id = "doesntExist";
-        ErrorResponse expected = new ErrorResponse(AccountResource.ENTITY_NOT_FOUND_FOR_ID + id);
+        ErrorResponse expected = ResourceUtil.createErrorResponse(id);
         when(ACCOUNT_DAO.findById(eq(id))).thenReturn(null);
 
         Response actual = resources.target("/accounts/" + id).request().get();
@@ -83,7 +83,8 @@ public class AccountResourceTest {
         Account money = new Account(BigDecimal.valueOf(123.45), "USD");
         when(ACCOUNT_DAO.update(eq(MONEY_IN_USD.getId()), eq(money))).thenReturn(MONEY_IN_USD);
 
-        Account createdAccount = resources.target("/accounts/" + MONEY_IN_USD.getId()).request().put(Entity.json(money), Account.class);
+        Account createdAccount = resources.target("/accounts/" + MONEY_IN_USD.getId()).request().put(Entity.json(money),
+                Account.class);
 
         Assert.assertEquals(MONEY_IN_USD, createdAccount);
     }

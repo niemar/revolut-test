@@ -2,13 +2,21 @@ package com.niemar.revolut.api;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 public class Account {
 
     private final String id;
+    @DecimalMax(value = "1000000")
+    @DecimalMin(value = "0")
+    @NotNull
     private final BigDecimal balance;
+    @NotEmpty
     private final String currency;
 
     @JsonCreator

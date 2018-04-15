@@ -2,15 +2,25 @@ package com.niemar.revolut.api;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 public class Transfer {
 
+    @NotEmpty
     private final String fromAccount;
+    @NotEmpty
     private final String toAccount;
     private final String id;
+    @DecimalMax(value = "1000000")
+    @DecimalMin(value = "0")
+    @NotNull
     private final BigDecimal amount;
+    @NotEmpty
     private final String currency;
     private final Status status;
 
@@ -24,6 +34,10 @@ public class Transfer {
         this.currency = currency;
         this.id = id;
         this.status = status;
+    }
+
+    public Transfer(String fromAccount, String toAccount, BigDecimal amount, String currency, Status status) {
+        this(fromAccount, toAccount, amount, currency, null, status);
     }
 
     public Transfer(String fromAccount, String toAccount, BigDecimal amount, String currency) {
@@ -95,5 +109,10 @@ public class Transfer {
                 ", currency='" + currency + '\'' +
                 ", status=" + status +
                 '}';
+    }
+
+    public static Transfer createOppositeTransfer(Transfer transfer) {
+        return new Transfer(transfer.getToAccount(), transfer.getFromAccount(), transfer.getAmount(),
+                transfer.getCurrency());
     }
 }

@@ -1,9 +1,10 @@
 package com.niemar.revolut.resources;
 
 import com.niemar.revolut.api.Account;
-import com.niemar.revolut.api.ErrorResponse;
 import com.niemar.revolut.datasource.AccountDAO;
+import com.niemar.revolut.util.ResourceUtil;
 
+import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -13,10 +14,6 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 public class AccountResource {
 
-    private static final String ID_PATH = "{id}";
-    private static final String ID = "id";
-    public static final String ENTITY_NOT_FOUND_FOR_ID = "Entity not found for id: ";
-
     private AccountDAO accountDAO;
 
     public AccountResource(AccountDAO accountDAO) {
@@ -24,20 +21,13 @@ public class AccountResource {
     }
 
     @GET
-    @Path(ID_PATH)
-    public Response getAccount(@PathParam(ID) String id) {
+    @Path(ResourceUtil.ID_PATH)
+    public Response getAccount(@PathParam(ResourceUtil.ID) String id) {
         Account account = accountDAO.findById(id);
         if (account == null) {
-            return buildNotFoundResponse(id);
+            return ResourceUtil.buildNotFoundResponse(id);
         }
         return Response.ok(account).build();
-    }
-
-    private Response buildNotFoundResponse(@PathParam(ID) String id) {
-        return Response.status(Response.Status.NOT_FOUND)
-                .entity(new ErrorResponse(ENTITY_NOT_FOUND_FOR_ID + id))
-                //.type(MediaType.APPLICATION_JSON)
-                .build();
     }
 
     @GET
@@ -46,31 +36,30 @@ public class AccountResource {
         return Response.ok(accounts).build();
     }
 
-    //TODO validation of account
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createAccount(Account account) {
+    public Response createAccount(@Valid Account account) {
         Account created = accountDAO.create(account);
         return Response.status(Response.Status.CREATED).entity(created).build();
     }
 
     @PUT
-    @Path(ID_PATH)
+    @Path(ResourceUtil.ID_PATH)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateAccount(@PathParam(ID) String id, Account account) {
+    public Response updateAccount(@PathParam(ResourceUtil.ID) String id, Account account) {
         Account updated = accountDAO.update(id, account);
         if (updated == null) {
-            return buildNotFoundResponse(id);
+            return ResourceUtil.buildNotFoundResponse(id);
         }
         return Response.ok().entity(updated).build();
     }
 
     @DELETE
-    @Path(ID_PATH)
-    public Response deleteAccount(@PathParam(ID) String id) {
+    @Path(ResourceUtil.ID_PATH)
+    public Response deleteAccount(@PathParam(ResourceUtil.ID) String id) {
         Account deleted = accountDAO.delete(id);
         if (deleted == null) {
-            return buildNotFoundResponse(id);
+            return ResourceUtil.buildNotFoundResponse(id);
         }
         return Response.status(Response.Status.NO_CONTENT).build();
     }

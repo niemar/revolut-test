@@ -1,6 +1,16 @@
 
 Money Transfer API
 
+API is not fully RESTFull, especially Transfer resource.
+
+I decided to not allow to delete transaction, but API provides method to cancel transfer (see method description).
+
+This app still requires a lot of to do, things TODO are on the bottom.
+
+Building project : mvn clean install
+
+Running app: java -jar target/revolut-test-1.0-SNAPSHOT.jar server config.yaml
+
 Produces and consumes only application/json.
 
     GET     /accounts/{id}

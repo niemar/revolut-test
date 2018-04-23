@@ -30,11 +30,37 @@ public class AccountInMemory implements AccountDAO {
         if (id == null) {
             return null;
         }
-        // thread safe update
-        return accounts.computeIfPresent(id, (idParam, updated) -> new Account(idParam, account.getBalance(), account.getCurrency()));
+
+        Account lock = findById(id);
+        if (lock == null) {
+            return null;
+        }
+
+        synchronized (lock) {
+            // don't update account that was already removed
+            if (!contains(lock)) {
+                return null;
+            }
+
+            Account newData = new Account(id, account.getBalance(), account.getCurrency());
+            accounts.put(id, newData);
+            return newData;
+        }
     }
 
     public Account delete(String id) {
-        return accounts.remove(id);
+        Account lock = findById(id);
+        if (lock == null) {
+            return null;
+        }
+
+        synchronized (lock) {
+            return accounts.remove(id);
+        }
+
+    }
+
+    private boolean contains(Account account) {
+        return accounts.containsValue(account);
     }
 }

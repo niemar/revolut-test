@@ -23,8 +23,8 @@ public class TransferService {
     }
 
     public Transfer createTransfer(Transfer transfer) {
-        final Account fromAccount = accountDAO.findById(transfer.getFromAccount());
-        final Account toAccount = accountDAO.findById(transfer.getToAccount());
+        Account fromAccount = accountDAO.findById(transfer.getFromAccount());
+        Account toAccount = accountDAO.findById(transfer.getToAccount());
         if (fromAccount == null || toAccount == null) {
             return createTransferWithStatus(transfer, Transfer.Status.DECLINED);
         }
@@ -36,7 +36,10 @@ public class TransferService {
 
         synchronized (lock1) {
             synchronized (lock2) {
-                if (!isTransferDataValid(transfer, fromAccount, toAccount)) {
+                // find again because accounts may have changed
+                fromAccount = accountDAO.findById(transfer.getFromAccount());
+                toAccount = accountDAO.findById(transfer.getToAccount());
+                if (fromAccount == null || toAccount == null || !isTransferDataValid(transfer, fromAccount, toAccount)) {
                     return createTransferWithStatus(transfer, Transfer.Status.DECLINED);
                 }
 

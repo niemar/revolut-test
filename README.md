@@ -134,3 +134,5 @@ TODO
  - put money and currency in one POJO
  - more integration tests
  - don't return array for transfers/ and accounts resources - bad practice
+ - add swagger docs
+ - use dependcy injection (Guice)

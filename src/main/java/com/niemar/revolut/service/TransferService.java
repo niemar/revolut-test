@@ -29,10 +29,16 @@ public class TransferService {
             return createTransferWithStatus(transfer, Transfer.Status.DECLINED);
         }
 
-        // deadlock prevention
-        int result = fromAccount.getId().compareTo(toAccount.getId());
-        Account lock1 = result > 0 ? fromAccount : toAccount;
-        Account lock2 = result > 0 ? toAccount : fromAccount;
+        String fromLock = accountDAO.getLockFor(fromAccount);
+        String toLock = accountDAO.getLockFor(toAccount);
+        if (fromLock == null || toLock == null) {
+            return createTransferWithStatus(transfer, Transfer.Status.DECLINED);
+        }
+
+        // always keep order of synchronization to avoid deadlocks
+        int result = fromLock.compareTo(toLock);
+        String lock1 = result > 0 ? fromLock : toLock;
+        String lock2 = result > 0 ? toLock : fromLock;
 
         synchronized (lock1) {
             synchronized (lock2) {

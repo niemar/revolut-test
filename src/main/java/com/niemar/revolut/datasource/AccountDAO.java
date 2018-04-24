@@ -11,4 +11,5 @@ public interface AccountDAO {
     Account create(Account account);
     Account update(String id, Account account);
     Account delete(String id);
+    String getLockFor(Account account);
 }
